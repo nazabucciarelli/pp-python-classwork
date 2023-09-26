@@ -1,0 +1,49 @@
+{% extends 'layout.html' %}
+{% block title %}
+    Inicio
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-2"></div>
+        <div class="col-6">
+            <h3>Ingrese un nuevo pais</h3>
+
+            <form action="/agregar_pais" method="post">
+
+                <label for="nombre">
+                    Nombre
+                </label>
+
+                <input type="text" name="nombre" class="form-control w-25">
+
+                <button type="submit" class="btn btn-success mt-2">
+                    Agregar
+                </button>
+
+            </form>
+        </div>
+        <div class="col-4">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Pais</th>
+                        <th>Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pais in paises %}
+                    <tr>
+                        <td>{{pais.nombre}}</td>
+                        <td>
+                            <a class="btn btn-danger" href="/borrar_pais/{{pais.id}}">Borrar</a>
+                        </td>
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+{% endblock %}
