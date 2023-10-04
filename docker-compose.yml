@@ -1,0 +1,32 @@
+version: '3' #Docker-compose version
+services: # Lista de servicios
+  classwork-pp-flask: #servicio/app de flask
+    build: # Lista de parámetros desde los cuales construir
+      context: . #contexto
+      dockerfile: Dockerfile #nombre de archivo de Dockerfile
+    ports: #puerto contenedor:puerto host
+      - "5000:5000"
+    restart: always #en caso de error o falla. Es como una práctica comun user este
+    volumes:
+    - .:/classwork-pp-flask
+    env_file:
+    - .env
+    depends_on:
+      - mysql_db
+    container_name: classwork-pp-flask
+
+  mysql_db:
+    image: mysql:5.7
+    env_file:
+    - .env
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - ./.data/db:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    restart: always
+    container_name: mysql_database

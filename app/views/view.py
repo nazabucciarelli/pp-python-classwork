@@ -37,6 +37,43 @@ from app.schemas.schema import (
     ProvinceBasicSchema,
     LocalidadBasicSchema
 )
+from flask.views import MethodView
+
+class PaisAPI(MethodView):
+    def get(self,pais_id=None):
+        if pais_id is None:
+            countries = Pais.query.all()
+            countries_schema = CountryBasicSchema().dump(countries,many=True) # Dump convierte el objeto a schema
+            return jsonify(countries_schema)
+        country = Pais.query.get(pais_id)
+        country_schema = CountryBasicSchema().dump(country)
+        return jsonify(country_schema)
+        
+    def post(self):
+        country_json = CountryBasicSchema().load(request.json) # Load convierte el json a schema
+        name = country_json.get('nombre')
+        new_country= Pais(nombre=name)
+        db.session.add(new_country)
+        db.session.commit()
+        return jsonify(msg="post method")
+    
+    def put(self, pais_id):
+        country = Pais.query.get(pais_id)
+        country_json= CountryBasicSchema().load(request.json)
+        name = country_json.get("nombre")
+        country.name = name
+        db.session.commit()
+        return jsonify(CountryBasicSchema().dump(country))
+    
+    def delete(self, pais_id):
+        country = Pais.query.get(pais_id)
+        db.session.delete(country)
+        db.session.commit()
+        return jsonify(msg="deleted country")
+    
+app.add_url_rule("/pais",view_func=PaisAPI.as_view('pais'))
+app.add_url_rule("/pais/<pais_id>",
+                 view_func=PaisAPI.as_view('pais_id'))
 
 @app.route("/users")
 @jwt_required()
@@ -82,34 +119,6 @@ def index():
     return render_template(
         'index.html'
     )
-
-@app.route('/agregar_pais', methods=['POST'])
-def nuevo_pais():
-    if request.method=='POST':
-        nombre_pais = request.form['nombre']
-
-        # Inicializo el objeto
-        nuevo_pais = Pais(nombre=nombre_pais)
-        # Preparo el objeto para enviarlo a la base de datos
-        db.session.add(nuevo_pais)
-        # Envio el objeto
-        db.session.commit()
-
-        return redirect(url_for('index'))
-
-@app.route('/borrar_pais/<id>')
-def borrar_pais(id):
-
-    pais = Pais.query.get(id)
-    db.session.delete(pais)
-    db.session.commit()
-    return redirect(url_for('index'))
-
-@app.route('/get_all_paises')
-def get_paises():
-    countries = Pais.query.all()
-    countries_schema = CountryBasicSchema().dump(countries, many=True)
-    return jsonify(countries_schema)
 
 @app.route('/add_user', methods=['post'])
 def add_user():

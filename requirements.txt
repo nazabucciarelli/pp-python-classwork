@@ -12,6 +12,7 @@ flask-marshmallow==0.15.0
 Flask-Migrate==4.0.4
 Flask-SQLAlchemy==3.0.3
 greenlet==2.0.2
+gunicorn==21.2.0
 importlib-metadata==6.6.0
 importlib-resources==5.12.0
 ipython==8.12.2
@@ -21,6 +22,7 @@ Jinja2==3.1.2
 Mako==1.2.4
 MarkupSafe==2.1.2
 marshmallow==3.20.1
+marshmallow-sqlalchemy==0.29.0
 matplotlib-inline==0.1.6
 packaging==23.1
 parso==0.8.3
@@ -37,7 +39,7 @@ six==1.16.0
 SQLAlchemy==2.0.15
 stack-data==0.6.2
 traitlets==5.9.0
-typing-extensions==4.6.2
+typing_extensions==4.6.2
 wcwidth==0.2.6
 Werkzeug==2.3.4
 zipp==3.15.0
